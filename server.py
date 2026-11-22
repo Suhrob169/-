@@ -8,12 +8,11 @@ from flask import Flask, request, jsonify, render_template_string
 app = Flask(__name__)
 DB = "orders.db"
 
-# ═══ НАСТРОЙКИ TELEGRAM (ЧТОБЫ ПОЛУЧАТЬ ЗАКАЗЫ НА ТЕЛЕФОН) ═══
-# 1. Напишите @BotFather в телеграм, создайте бота и возьмите ТОКЕН.
-# 2. Напишите @userinfobot, чтобы узнать свой ID.
-BOT_TOKEN = "9025892764:AAFA9Y_z1j1MFmHZp2BoAKZoSNqBNSyFVi0" 
-CHAT_ID = " 8123866641"
-# =============================================================
+# ═══ НАСТРОЙКИ TELEGRAM ═══
+# Я уже вставил ваш токен сюда. Осталось только вписать ваш CHAT_ID (цифры).
+BOT_TOKEN = "9025892764:AAF9Y_z1j1FMHhZpBoAKZoSnqBNSyFVj0"
+CHAT_ID = "ВАШ_ЧАТ_ID_ЦИФРАМИ" 
+# ==========================
 
 def db():
     con = sqlite3.connect(DB)
@@ -32,7 +31,9 @@ def init_db():
 init_db()
 
 def send_tg(msg):
-    if BOT_TOKEN == "9025892764:AAFA9Y_z1j1MFmHZp2BoAKZoSNqBNSyFVi0": return
+    if CHAT_ID == "ВАШ_ЧАТ_ID_ЦИФРАМИ":
+        print("Telegram не настроен: не указан CHAT_ID")
+        return
     try:
         text = urllib.parse.quote(msg)
         url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={CHAT_ID}&text={text}"
@@ -44,7 +45,8 @@ def send_tg(msg):
 def order():
     d = request.get_json(force=True)
     cart = d.get("cart", [])
-    name, phone = d.get("name"), d.get("phone")
+    name = d.get("name")
+    phone = d.get("phone")
     address = d.get("address", "Самовывоз")
     
     if not cart or not name or not phone:
@@ -61,6 +63,7 @@ def order():
     oid = cur.lastrowid
     con.close()
 
+    # Отправка уведомления в Telegram
     tg_msg = f"🛒 НОВЫЙ ЗАКАЗ №{oid}!\n\nКлиент: {name}\nТел: {phone}\nАдрес: {address}\n\n{items_text}\n\n💰 Итого: {total} сом."
     send_tg(tg_msg)
 
@@ -90,4 +93,4 @@ def admin():
     return render_template_string(ADMIN_HTML, orders=orders)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
