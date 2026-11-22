@@ -1,20 +1,30 @@
-app = "parvina-cakes"
+# fly.toml app configuration file generated for parvinacakes02 on 2026-11-22T12:09:27Z
+#
+# See https://docs.fly.io/reference/configuration for information about how to use this file.
+#
 
-kill_signal = "SIGINT"
-kill_timeout = 5
-processes = []
+app = 'parvinacakes02'
+primary_region = 'ams'
+kill_signal = 'SIGINT'
+kill_timeout = '5s'
 
+[build]
 [env]
-  FLET_SESSION_TIMEOUT = "60"
+  FLET_SESSION_TIMEOUT = '60'
 
 [http_service]
-  internal_port = 8000
+  internal_port = 8080
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
 
   [http_service.concurrency]
-    type = "connections"
-    soft_limit = 200
+    type = 'connections'
     hard_limit = 250
+    soft_limit = 200
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
