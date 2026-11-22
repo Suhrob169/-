@@ -15,7 +15,7 @@ HOURS = "Ежедневно 24/7"
 FREE_FROM, FEE = 200, 20
 
 # ⚠️ ВАЖНО: Когда загрузите server.py на Render, замените эту ссылку!
-SERVER_API = "http://127.0.0.1:5000/api/order" 
+SERVER_API = "SERVER_API = "https://parvinacakes02.fly.dev/api/order"" 
 
 PRODUCTS = [
     ("Медовик", "Нежный торт с медовыми коржами и сметанным кремом", 120, 140, "шт.", "Торты", "🎂", "medovik.jpg"),
